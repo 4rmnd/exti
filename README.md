@@ -84,7 +84,7 @@ Exti is built with a **Privacy-First** philosophy:
 
 ## 📑 Privacy Policy
 
-For privacy & legal compliance, see [`privacy-policy.md`](privacy-policy.md).
+For privacy & legal compliance, view our official [Exti Privacy Policy](https://github.com/exti-extension/privacy-policy).
 
 ---
 
