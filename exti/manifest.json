@@ -1,0 +1,19 @@
+{
+  "manifest_version": 3,
+  "name": "Exti - Aesthetic Live Wallpaper Tab",
+  "version": "1.0.0",
+  "description": "New tab dashboard dengan live wallpaper liquid chrome, clock, quick links, dan widget produktivitas.",
+  "chrome_url_overrides": {
+    "newtab": "newtab.html"
+  },
+  "permissions": [
+    "storage",
+    "unlimitedStorage",
+    "notifications"
+  ],
+  "icons": {
+    "16": "icons/favicon-16x16.png",
+    "48": "icons/android-chrome-192x192.png",
+    "128": "icons/android-chrome-192x192.png"
+  }
+}

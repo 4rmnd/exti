@@ -1,0 +1,80 @@
+/* ===================================
+   EXTI — Wallpaper CSS
+   Animated background presets
+=================================== */
+
+.wallpaper {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  background-size: 400% 400%;
+  transition: background 0.6s ease;
+}
+
+.wallpaper-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* ===== PRESET 1: Liquid Chrome (Default) ===== */
+@keyframes liquidShift {
+  0%   { background-position: 0% 50%; }
+  25%  { background-position: 50% 100%; }
+  50%  { background-position: 100% 50%; }
+  75%  { background-position: 50% 0%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes liquidShimmer {
+  0%   { opacity: 0.6; }
+  50%  { opacity: 1; }
+  100% { opacity: 0.6; }
+}
+
+.wallpaper-video {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  object-fit: cover;
+  background-size: cover;
+  background-position: center;
+  z-index: -1;
+  display: none; /* Controlled by JS */
+}
+
+/* Fallback canvas shows last video frame when video is frozen */
+.wallpaper-canvas {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  object-fit: cover;
+  z-index: -2;
+  display: none;
+}
+
+.wallpaper-liquid {
+  background: transparent;
+}
+
+/* Liquid Chrome overlay shimmer */
+.wallpaper-liquid::after {
+  display: none;
+}
+
+
+/* ===== PRESET 4: Dark Minimal ===== */
+.wallpaper-dark {
+  background: transparent;
+}
+
+/* ===== Custom Photo Wallpaper ===== */
+.wallpaper-custom {
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  animation: none;
+}

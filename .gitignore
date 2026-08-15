@@ -1,0 +1,33 @@
+# Claude / AI Assistant Local Configurations & Skills (DO NOT COMMIT SECRETS)
+.claude/
+
+# Internal Planning Documents & Notes
+01_project_overview.md
+02_design_system.md
+03_widget_specs.md
+04_technical_architecture.md
+05_roadmap.md
+06_publishing_legal.md
+CLAUDE.md
+design.md
+
+# Archives & Temporary Zip Files
+*.zip
+Architect.zip
+exti-v1.0.0.zip
+
+# Environment Variables & Secrets
+.env
+.env.local
+.env.*
+*.pem
+*.key
+
+# OS Junk Files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Dependencies (if node is used in future)
+node_modules/
+npm-debug.log*

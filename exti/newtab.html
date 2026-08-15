@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Exti - Aesthetic Live Wallpaper Tab</title>
+  <link rel="icon" type="image/x-icon" href="icons/favicon.ico">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/main.css?v=2">
+  <link rel="stylesheet" href="css/wallpaper.css?v=2">
+  <link rel="stylesheet" href="css/widgets.css?v=5">
+  <link rel="stylesheet" href="css/settings.css?v=4">
+</head>
+<body>
+
+  <!-- Wallpaper Layer -->
+  <video id="wallpaper-video" class="wallpaper-video" src="Liquid Animate Loop.webm" poster="Liquid.jpeg" style="background-image: url('Liquid.jpeg');" autoplay loop muted playsinline></video>
+  <canvas id="wallpaper-canvas" class="wallpaper-canvas"></canvas>
+  <div id="wallpaper" class="wallpaper wallpaper-liquid"></div>
+  <div id="wallpaper-overlay" class="wallpaper-overlay"></div>
+
+  <!-- Settings Dropdown Trigger & Button -->
+  <div class="settings-trigger"></div>
+  <div class="settings-menu-container">
+    <button id="settings-btn" class="settings-btn" title="Settings">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="6 9 12 15 18 9"></polyline>
+      </svg>
+    </button>
+    <div id="settings-bento-menu" class="bento-grid hidden">
+      
+      <!-- Morphing Controls -->
+      <div class="bento-spacer"></div>
+      <button class="bento-back-btn hidden" id="bento-back-btn" data-i18n="bento-back-btn">⬅ Kembali</button>
+
+      <!-- Bento 1: Wallpaper -->
+      <div class="bento-card bento-wallpaper">
+        <h3 class="bento-title" data-i18n="wallpaper-title">🎨 Wallpaper</h3>
+        <div class="wallpaper-presets">
+          <button class="preset-btn active" data-preset="liquid-chrome">
+            <div class="preset-thumb preset-thumb-liquid"></div> <span data-i18n="wallpaper-preset-liquid">Liquid Chrome</span>
+          </button>
+          <button class="preset-btn" data-preset="dark">
+            <div class="preset-thumb preset-thumb-dark"></div> <span data-i18n="wallpaper-preset-dark">Dark Minimal</span>
+          </button>
+        </div>
+        <div class="custom-wallpaper">
+          <div class="upload-btn-row">
+            <input type="file" id="wallpaper-file-photo" accept="image/*" class="file-input">
+            <label for="wallpaper-file-photo" class="file-btn" data-i18n="wallpaper-upload-photo">Upload Photo</label>
+            <input type="file" id="wallpaper-file-video" accept="video/mp4,video/webm" class="file-input">
+            <label for="wallpaper-file-video" class="file-btn" data-i18n="wallpaper-upload-video">Upload Video</label>
+          </div>
+          <button class="file-btn full-width" id="wallpaper-clear" style="display: none; margin-top: 4px; background: rgba(255, 80, 80, 0.15); border-color: rgba(255, 80, 80, 0.3);" data-i18n="wallpaper-clear-custom">
+            ✕ Hapus Custom
+          </button>
+        </div>
+        <div class="bento-card-actions">
+          <button class="bento-action-btn bento-back-card" data-i18n="wallpaper-exit">← Exit</button>
+          <button class="bento-action-btn bento-save-card" data-card="wallpaper" data-i18n="wallpaper-save">Save</button>
+        </div>
+      </div>
+
+      <!-- Bento 2: Toggles / Widget Settings -->
+      <div class="bento-card bento-toggles">
+        <h3 class="bento-title" data-i18n="widgets-title">🧩 Widgets</h3>
+
+        <!-- View A: Widget Tile Grid -->
+        <div class="widget-toggle-view" id="widget-toggle-view">
+          <div class="widget-tiles-slider">
+            <!-- Slide 1 -->
+            <div class="widget-slide">
+              <button class="bento-widget-tile" id="tile-clock" data-widget="clock">
+                <div class="tile-quick-toggle" data-widget="clock" role="switch" tabindex="0" title="Toggle Clock"></div>
+                <span class="tile-icon">🕒</span>
+                <span class="tile-label" data-i18n="widget-tile-clock">Clock</span>
+                <span class="tile-status-dot"></span>
+              </button>
+              <button class="bento-widget-tile" id="tile-quicklinks" data-widget="quicklinks">
+                <div class="tile-quick-toggle" data-widget="quicklinks" role="switch" tabindex="0" title="Toggle Links"></div>
+                <span class="tile-icon">🔗</span>
+                <span class="tile-label" data-i18n="widget-tile-links">Links</span>
+                <span class="tile-status-dot"></span>
+              </button>
+              <button class="bento-widget-tile" id="tile-greeting" data-widget="greeting">
+                <div class="tile-quick-toggle" data-widget="greeting" role="switch" tabindex="0" title="Toggle Hi"></div>
+                <span class="tile-icon">👋</span>
+                <span class="tile-label" data-i18n="widget-tile-greeting">Hi</span>
+                <span class="tile-status-dot"></span>
+              </button>
+              <button class="bento-widget-tile" id="tile-todo" data-widget="todo">
+                <div class="tile-quick-toggle" data-widget="todo" role="switch" tabindex="0" title="Toggle Todo"></div>
+                <span class="tile-icon">☑️</span>
+                <span class="tile-label" data-i18n="widget-tile-todo">Todo</span>
+                <span class="tile-status-dot"></span>
+              </button>
+              <button class="bento-widget-tile" id="tile-notes" data-widget="notes">
+                <div class="tile-quick-toggle" data-widget="notes" role="switch" tabindex="0" title="Toggle Notes"></div>
+                <span class="tile-icon">📄</span>
+                <span class="tile-label" data-i18n="widget-tile-notes">Notes</span>
+                <span class="tile-status-dot"></span>
+              </button>
+              <button class="bento-widget-tile" id="tile-pomodoro" data-widget="pomodoro">
+                <div class="tile-quick-toggle" data-widget="pomodoro" role="switch" tabindex="0" title="Toggle Pomo"></div>
+                <span class="tile-icon">⏱️</span>
+                <span class="tile-label" data-i18n="widget-tile-pomodoro">Pomo</span>
+                <span class="tile-status-dot"></span>
+              </button>
+            </div>
+            <!-- Slide 2 -->
+            <div class="widget-slide">
+              <button class="bento-widget-tile" id="tile-photo" data-widget="photo">
+                <div class="tile-quick-toggle" data-widget="photo" role="switch" tabindex="0" title="Toggle Photo"></div>
+                <span class="tile-icon">🖼️</span>
+                <span class="tile-label" data-i18n="widget-tile-photo">Photo</span>
+                <span class="tile-status-dot"></span>
+              </button>
+            </div>
+          </div>
+          <button class="customize-layout-btn" id="btn-customize-layout">
+            <span>✦</span> <span data-i18n="btn-customize-layout">Customize Layout</span>
+          </button>
+        </div>
+
+        <!-- View B: Per-Widget Settings (slides in) -->
+        <div class="widget-settings-view hidden" id="widget-settings-view">
+          <div class="ws-header">
+            <button class="ws-back-btn" id="ws-back-btn">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+              <span data-i18n="ws-back-btn-text">Widgets</span>
+            </button>
+            <div class="ws-title-group">
+              <span class="ws-widget-icon" id="ws-widget-icon"></span>
+              <span class="ws-widget-title" id="ws-widget-title"></span>
+            </div>
+          </div>
+
+          <!-- Shared: Visibility toggle -->
+          <div class="ws-visibility-row">
+            <span class="ws-field-label" data-i18n="ws-show-widget">Tampilkan Widget</span>
+            <label class="toggle-switch">
+              <input type="checkbox" id="ws-visible-toggle">
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+          <div class="ws-separator"></div>
+
+          <!-- Clock Settings -->
+          <div class="ws-panel" id="ws-panel-clock">
+            <div class="pref-row">
+              <label class="settings-label" data-i18n="ws-clock-format-label">Format Jam</label>
+              <select id="ws-clock-format" class="settings-select">
+                <option value="24h" data-i18n="ws-clock-format-24">24 Jam</option>
+                <option value="12h" data-i18n="ws-clock-format-12">12 Jam (AM/PM)</option>
+              </select>
+            </div>
+            <div class="pref-row" style="display: none;">
+              <label class="settings-label">Bahasa</label>
+              <select id="ws-clock-lang" class="settings-select">
+                <option value="id">Indonesia</option>
+                <option value="en">English</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Quick Links -->
+          <div class="ws-panel" id="ws-panel-quicklinks">
+            <div class="pref-row" style="margin-bottom: 12px;">
+              <label class="settings-label" data-i18n="ws-links-target">Buka di Tab Baru</label>
+              <label class="toggle-switch">
+                <input type="checkbox" id="ws-links-target">
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+            <div id="settings-quicklinks-list" class="bento-scroll-area" style="max-height: 180px;"></div>
+            <button class="add-link-btn" id="settings-add-link" style="margin-top: 6px;" data-i18n="ws-links-add">+ Tambah Link</button>
+          </div>
+
+          <!-- Greeting Settings -->
+          <div class="ws-panel hidden" id="ws-panel-greeting">
+            <div class="pref-row">
+              <label class="settings-label" data-i18n="ws-greeting-name-label">Nama</label>
+              <input type="text" id="ws-greeting-name" class="settings-input" placeholder="Nama kamu..." data-i18n-placeholder="ws-greeting-name-placeholder">
+            </div>
+          </div>
+
+          <!-- Todo Settings -->
+          <div class="ws-panel hidden" id="ws-panel-todo">
+            <p class="ws-info-text" data-i18n="ws-todo-info">📋 Tambah dan kelola task langsung dari widget Todo di layar.</p>
+          </div>
+
+          <!-- Notes Settings -->
+          <div class="ws-panel hidden" id="ws-panel-notes">
+            <p class="ws-info-text" data-i18n="ws-notes-info">📝 Catatanmu otomatis tersimpan saat kamu mengetik.</p>
+          </div>
+
+          <!-- Pomodoro Settings -->
+          <div class="ws-panel hidden" id="ws-panel-pomodoro">
+            <div class="pref-row">
+              <label class="settings-label" data-i18n="ws-pomo-work-label">Kerja (menit)</label>
+              <input type="number" id="ws-pomo-work" class="settings-input settings-input-num" min="1" max="60">
+            </div>
+            <div class="pref-row">
+              <label class="settings-label" data-i18n="ws-pomo-break-label">Istirahat (menit)</label>
+              <input type="number" id="ws-pomo-break" class="settings-input settings-input-num" min="0" max="60">
+            </div>
+            <div class="pref-row">
+              <label class="settings-label" data-i18n="ws-pomo-auto-start">Auto-start</label>
+              <label class="toggle-switch">
+                <input type="checkbox" id="ws-pomo-autostart">
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Photo Widget Settings -->
+          <div class="ws-panel hidden" id="ws-panel-photo">
+            <div class="pref-row">
+              <label class="settings-label" data-i18n="ws-photo-size-label">Ukuran</label>
+              <select id="ws-photo-size" class="settings-select">
+                <option value="1x1" data-i18n="ws-photo-size-1x1">Small Square (1:1)</option>
+                <option value="2x2" data-i18n="ws-photo-size-2x2">Large Square (2:2)</option>
+                <option value="2x3" data-i18n="ws-photo-size-2x3">Portrait (2:3)</option>
+                <option value="3x2" data-i18n="ws-photo-size-3x2">Landscape (3:2)</option>
+                <option value="16x9" data-i18n="ws-photo-size-16x9">Wide (16:9)</option>
+                <option value="custom" data-i18n="ws-photo-size-custom">Custom (Bebas)</option>
+              </select>
+            </div>
+            <div style="margin-top: 10px;">
+              <input type="file" id="ws-photo-file" accept="image/*" class="file-input">
+              <label for="ws-photo-file" class="file-btn" style="width:100%; box-sizing:border-box; text-align:center; display:block;" data-i18n="ws-photo-upload">📷 Upload Foto</label>
+            </div>
+            <div style="margin-top: 8px; display: flex; gap: 8px;">
+              <button id="ws-photo-recrop" class="file-btn" style="flex: 1; text-align:center; display:none;" data-i18n="ws-photo-recrop">✂ Crop Ulang</button>
+              <button id="ws-photo-clear" class="file-btn" style="flex: 1; text-align:center; display:none; background:rgba(255,80,80,0.15); border-color:rgba(255,80,80,0.3);" data-i18n="ws-photo-clear">✕ Hapus Foto</button>
+            </div>
+            <div id="ws-photo-preview" style="margin-top:10px; border-radius:10px; overflow:hidden; display:none; max-height:100px;">
+              <img id="ws-photo-preview-img" style="width:100%; height:100px; object-fit:cover; display:block; border-radius:10px;" src="" alt="">
+            </div>
+          </div>
+        </div>
+
+        <div class="bento-card-actions">
+          <button class="bento-action-btn bento-back-card" data-i18n="wallpaper-exit">← Exit</button>
+          <button class="bento-action-btn bento-save-card" data-card="toggles" data-i18n="wallpaper-save">Save</button>
+        </div>
+      </div>
+
+      <!-- Bento 3: General -->
+      <div class="bento-card bento-prefs">
+        <h3 class="bento-title" data-i18n="general-card-title">⚙️ General</h3>
+        <div class="bento-card-content" id="general-card-content">
+          <!-- Content populated by JS -->
+        </div>
+        <div class="bento-card-actions">
+          <button class="bento-action-btn bento-back-card" data-i18n="wallpaper-exit">← Exit</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Widget Container -->
+  <div id="widget-container">
+
+    <!-- Clock Widget -->
+    <div class="widget widget-clock" id="widget-clock" data-widget="clock">
+      <div id="clock-day" class="clock-day">JUMAT</div>
+      <div id="clock-date" class="clock-date">15 MEI 2026</div>
+      <div id="clock-time" class="clock-time">19:20</div>
+    </div>
+
+    <!-- Quick Links Widget -->
+    <div class="widget widget-quicklinks" id="widget-quicklinks" data-widget="quicklinks">
+      <div class="quicklinks-bar" id="quicklinks-bar"></div>
+      <button class="quicklinks-add-btn" id="quicklinks-add-btn" title="Tambah link" data-i18n-title="quicklinks-add-tooltip">+</button>
+    </div>
+
+    <!-- Greeting Widget -->
+    <div class="widget widget-card widget-greeting hidden" id="widget-greeting" data-widget="greeting">
+      <div class="greeting-text" id="greeting-text">Selamat pagi 👋</div>
+    </div>
+
+    <!-- Todo Widget -->
+    <div class="widget widget-card widget-todo hidden" id="widget-todo" data-widget="todo">
+      <div class="widget-label" data-i18n="widget-label-tasks">TASKS</div>
+      <ul class="todo-list" id="todo-list"></ul>
+      <div class="todo-input-row">
+        <input type="text" id="todo-input" class="todo-input" placeholder="Tambah task baru..." data-i18n-placeholder="widget-todo-placeholder">
+        <button class="todo-add-btn" id="todo-add-btn">+</button>
+      </div>
+    </div>
+
+    <!-- Notes Widget -->
+    <div class="widget widget-card widget-notes hidden" id="widget-notes" data-widget="notes">
+      <div class="widget-label" data-i18n="widget-label-notes">NOTES</div>
+      <textarea class="notes-textarea" id="notes-textarea" placeholder="Ketik catatanmu..." data-i18n-placeholder="widget-notes-placeholder"></textarea>
+    </div>
+
+    <!-- Pomodoro Widget -->
+    <div class="widget widget-card widget-pomodoro hidden" id="widget-pomodoro" data-widget="pomodoro">
+      <div class="widget-label">POMODORO</div>
+      <div class="pomodoro-display" id="pomodoro-display">25:00</div>
+      <div class="pomodoro-mode" id="pomodoro-mode">Waktu Kerja</div>
+      <div class="pomodoro-controls">
+        <button class="pomo-btn pomo-start" id="pomo-start">▶ Mulai</button>
+        <button class="pomo-btn pomo-reset" id="pomo-reset" data-i18n="widget-pomo-reset">↺ Reset</button>
+      </div>
+      <div class="pomodoro-sessions" id="pomodoro-sessions">0 sesi selesai</div>
+    </div>
+
+    <!-- Photo Widget -->
+    <div class="widget widget-photo hidden" id="widget-photo" data-widget="photo">
+      <div class="photo-widget-inner">
+        <div class="photo-widget-placeholder" id="photo-widget-placeholder">
+          <span class="photo-widget-placeholder-icon">🖼️</span>
+          <span class="photo-widget-placeholder-text">No photo selected</span>
+        </div>
+        <img class="photo-widget-img" id="photo-widget-img" src="" alt="" style="display:none;">
+      </div>
+      <!-- Custom resize handle — visible only in customize-mode when size-custom is active -->
+      <div class="photo-resize-handle" id="photo-resize-handle" title="Drag to resize"></div>
+    </div>
+
+  </div>
+
+  <!-- Customize Mode Overlay -->
+  <div id="customize-overlay" class="customize-overlay hidden">
+    <button id="customize-reset-btn" class="customize-reset-btn" title="Reset posisi widget ke preset default" data-i18n="customize-reset-btn" data-i18n-title="customize-reset-tooltip">↩ Reset Layout</button>
+    <div class="customize-hint" data-i18n="customize-hint">✦ Drag widgets to reposition them</div>
+    <button id="customize-done-btn" class="customize-done-btn" data-i18n="customize-done-btn">✓ Done</button>
+  </div>
+
+  <!-- Quick Link Add Modal -->
+  <div class="modal-overlay hidden" id="modal-overlay">
+    <div class="modal" id="modal-quicklink">
+      <h3 class="modal-title" data-i18n="modal-link-title">Tambah Quick Link</h3>
+      <input type="text" id="modal-link-name" class="modal-input" placeholder="Nama (contoh: YouTube)" data-i18n-placeholder="modal-link-name-placeholder">
+      <input type="text" id="modal-link-url" class="modal-input" placeholder="URL (contoh: https://youtube.com)" data-i18n-placeholder="modal-link-url-placeholder">
+      <div class="custom-wallpaper" style="margin-bottom: 12px; margin-top: -4px;">
+        <label class="settings-label" style="display:block; margin-bottom:4px; color:rgba(255,255,255,0.8);" data-i18n="modal-link-icon-label">Upload Icon (Opsional)</label>
+        <input type="file" id="modal-link-icon" accept="image/*" class="file-input">
+        <label for="modal-link-icon" class="file-btn" data-i18n="modal-link-file-label">📁 Pilih File</label>
+      </div>
+      <div class="modal-actions">
+        <button class="btn-save" id="modal-link-save" data-i18n="modal-link-save">Simpan</button>
+        <button class="btn-cancel" id="modal-link-cancel" data-i18n="modal-link-cancel">Batal</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Confirm Modal -->
+  <div class="modal-overlay hidden" id="modal-confirm-overlay">
+    <div class="modal" id="modal-confirm" style="width: 360px;">
+      <h3 class="modal-title" data-i18n="modal-confirm-title">Ganti Wallpaper?</h3>
+      <p style="color: rgba(255,255,255,0.7); font-size: 13px; line-height: 1.5; margin-bottom: 16px;" id="modal-confirm-desc" data-i18n="modal-confirm-desc">Anda sedang menggunakan custom wallpaper. Yakin ingin mengganti ke tampilan default? Custom wallpaper akan dihapus.</p>
+      <div class="modal-actions">
+        <button class="btn-save" id="modal-confirm-yes" data-i18n="modal-confirm-yes">Ya, Ganti</button>
+        <button class="btn-cancel" id="modal-confirm-no" data-i18n="modal-confirm-no">Batal</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Alert Modal -->
+  <div class="modal-overlay hidden" id="modal-alert-overlay" style="z-index: 10000;">
+    <div class="modal" id="modal-alert" style="width: 320px;">
+      <h3 class="modal-title" id="modal-alert-title">Peringatan</h3>
+      <p style="color: rgba(255,255,255,0.7); font-size: 13px; line-height: 1.5; margin-bottom: 20px;" id="modal-alert-message"></p>
+      <div class="modal-actions">
+        <button class="btn-save full-width" id="modal-alert-ok" style="width: 100%;">OK</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Crop Modal (fullscreen) -->
+  <div class="crop-modal" id="crop-modal">
+    <div class="crop-modal__header">
+      <span class="crop-modal__title">✂️ Crop Foto</span>
+      <span class="crop-modal__hint">Seret gambar untuk geser · Scroll untuk zoom · Seret kotak putih untuk crop</span>
+    </div>
+    <div class="crop-canvas-container" id="crop-canvas-container">
+      <canvas id="crop-canvas"></canvas>
+    </div>
+    <div class="crop-toolbar">
+      <div class="crop-toolbar__group">
+        <button class="crop-tool-btn" id="crop-rotate-l" title="Putar kiri 90°">↺</button>
+        <button class="crop-tool-btn" id="crop-rotate-r" title="Putar kanan 90°">↻</button>
+      </div>
+      <div class="crop-toolbar__group">
+        <button class="crop-tool-btn" id="crop-zoom-out" title="Zoom out">−</button>
+        <button class="crop-tool-btn" id="crop-zoom-in" title="Zoom in">+</button>
+      </div>
+      <div class="crop-toolbar__group">
+        <button class="crop-tool-btn" id="crop-reset" title="Reset tampilan">⊙</button>
+      </div>
+      <div class="crop-toolbar__spacer"></div>
+      <div class="crop-toolbar__group">
+        <button class="crop-tool-btn crop-tool-btn--cancel" id="crop-cancel">✕ Batal</button>
+        <button class="crop-tool-btn crop-tool-btn--confirm" id="crop-confirm">✓ Crop &amp; Simpan</button>
+      </div>
+    </div>
+  </div>
+
+
+  <script src="js/lang.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/drag.js"></script>
+  <script src="js/clock.js"></script>
+  <script src="js/quicklinks.js"></script>
+  <script src="js/greeting.js"></script>
+  <script src="js/todo.js"></script>
+  <script src="js/notes.js"></script>
+  <script src="js/pomodoro.js"></script>
+  <script src="js/crop.js"></script>
+  <script src="js/photo.js"></script>
+  <script src="js/settings.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>

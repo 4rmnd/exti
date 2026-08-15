@@ -1,0 +1,904 @@
+/* ===================================
+   EXTI — Settings Panel CSS
+=================================== */
+
+/* Bento Grid Container (Alt+Tab Style) */
+.bento-grid {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start; /* Do not stretch cards to match height */
+  gap: 16px;
+  width: max-content;
+  max-width: calc(100vw - 80px); /* Fit within screen width */
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 16px;
+  /* Hide scrollbar but keep scroll functionality */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  transform-origin: top center;
+  transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  position: relative;
+}
+.bento-grid::-webkit-scrollbar {
+  display: none;
+}
+
+/* Morphing Spacer to push content to the right */
+.bento-spacer {
+  width: 0;
+  transition: width 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.bento-grid.has-expanded {
+  width: calc(100vw - 80px); /* Expand to full width so spacer can push card */
+  justify-content: flex-end;
+  padding-right: 40px;
+}
+.bento-grid.has-expanded .bento-spacer {
+  width: 40px;
+  flex-grow: 1; /* Pushes the expanded card to the right */
+}
+
+/* Back Button inside Grid */
+.bento-back-btn {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(10px);
+  color: white;
+  padding: 8px 16px;
+  border-radius: 12px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  z-index: 10;
+  opacity: 0;
+  transform: translateX(-20px);
+  pointer-events: none;
+  transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+.bento-grid.has-expanded .bento-back-btn {
+  opacity: 1;
+  transform: translateX(0);
+  pointer-events: auto;
+}
+.bento-back-btn:hover {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+/* Hide scrollbar, keep scroll function */
+.bento-grid { scrollbar-width: none; }
+.bento-grid::-webkit-scrollbar { display: none; }
+
+.bento-grid.hidden {
+  opacity: 0;
+  transform: scale(0.9) translateY(-20px);
+  pointer-events: none;
+  visibility: hidden;
+}
+
+/* Individual Bento Card */
+.bento-card {
+  background: rgba(255, 255, 255, 0.12); /* Glass tint */
+  border: 1px solid rgba(255, 255, 255, 0.35); /* White border */
+  backdrop-filter: blur(28px) saturate(120%) brightness(0.65);
+  -webkit-backdrop-filter: blur(28px) saturate(120%) brightness(0.65);
+  border-radius: 20px;
+  padding: 20px; /* Increased padding for cleaner look */
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.3), inset 0 1px 2px rgba(255, 255, 255, 0.4);
+  position: relative;
+  overflow: hidden;
+  transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  cursor: pointer;
+}
+
+.bento-card:hover {
+  background: rgba(255, 255, 255, 0.18);
+  border-color: rgba(255, 255, 255, 0.45);
+}
+
+/* Collapsed State */
+
+/* Collapsed State (hidden cards during morph) */
+.bento-card.collapsed {
+  opacity: 0;
+  width: 0 !important;
+  min-width: 0 !important;
+  padding-left: 0;
+  padding-right: 0;
+  margin-left: 0;
+  margin-right: 0;
+  border-width: 0;
+  pointer-events: none;
+  flex-shrink: 1;
+}
+
+/* Expanded State (The isolated detail view) */
+.bento-card.expanded {
+  width: min(460px, 100vw) !important;   /* Caps at viewport width on any zoom */
+  box-sizing: border-box;
+  min-height: 420px;
+  cursor: default;
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.5);
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.4), inset 0 1px 2px rgba(255, 255, 255, 0.5);
+}
+.bento-card.expanded:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+/* Card Action Buttons (Save/Back) — hidden in grid, visible when expanded */
+.bento-card-actions {
+  display: none;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 8px;
+  margin-top: auto;
+  padding-top: 16px;
+}
+.bento-card.expanded .bento-card-actions {
+  display: flex;
+}
+.bento-action-btn {
+  padding: 8px 18px;
+  border-radius: 10px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1px solid rgba(255,255,255,0.2);
+  color: white;
+  transition: all 0.2s;
+}
+.bento-back-card {
+  background: rgba(255,255,255,0.08);
+}
+.bento-back-card:hover {
+  background: rgba(255,255,255,0.18);
+}
+.bento-save-card {
+  background: rgba(100, 180, 255, 0.25);
+  border-color: rgba(100, 180, 255, 0.5);
+}
+.bento-save-card:hover {
+  background: rgba(100, 180, 255, 0.4);
+}
+
+/* Fade out inner contents if collapsed */
+.bento-card.collapsed * {
+  display: none;
+}
+
+/* Prevent native dropdown interactions when card is in the grid to avoid glitches during expansion */
+.bento-card:not(.expanded) select,
+.bento-card:not(.expanded) .btn-reset {
+  pointer-events: none;
+}
+
+/* Hide titles or restructure if needed in expanded view? No, keep it. */
+
+/* Shimmer effect for bento cards */
+.bento-card::before {
+  content: ''; position: absolute; inset: 0; border-radius: inherit;
+  background: linear-gradient(
+    115deg, 
+    rgba(255,255,255,0.05) 0%, 
+    rgba(255,200,230,0.1) 25%, 
+    rgba(200,230,255,0.1) 50%, 
+    rgba(255,255,255,0.05) 100%
+  );
+  background-size: 200% 200%;
+  animation: iridescentShimmer 10s ease-in-out infinite;
+  z-index: -1; pointer-events: none;
+}
+
+/* Card Layout Assigments (Widths for Flex Row) */
+.bento-wallpaper { width: 360px; }
+.bento-toggles { width: 340px; }
+.bento-prefs { width: 280px; }
+.bento-links { width: 300px; }
+.bento-danger { width: 220px; }
+
+/* Bento Titles */
+.bento-title {
+  font-size: 13px; font-weight: 600; letter-spacing: 1px;
+  color: #ffffff; text-transform: uppercase; margin-bottom: 16px;
+  display: flex; align-items: center; gap: 8px;
+}
+
+/* Toggle Grid inside Bento */
+.toggles-grid-container {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+
+.bento-toggle-btn {
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px;
+  background: rgba(0, 0, 0, 0.15); border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px; padding: 10px 4px;
+  color: rgba(255, 255, 255, 0.5); cursor: pointer; transition: all 0.2s;
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.bento-toggle-btn:hover { background: rgba(255, 255, 255, 0.1); color: rgba(255,255,255,0.8); }
+
+.bento-toggle-btn.active {
+  background: rgba(184, 212, 240, 0.3);
+  border-color: rgba(184, 212, 240, 0.6);
+  color: #ffffff;
+  box-shadow: 0 4px 12px rgba(184,212,240,0.15), inset 0 1px 2px rgba(255,255,255,0.4);
+}
+
+.bento-toggle-icon { font-size: 18px; filter: grayscale(1); transition: 0.2s; opacity: 0.6; }
+.bento-toggle-btn.active .bento-toggle-icon { filter: grayscale(0); opacity: 1; }
+
+.bento-toggle-label { font-size: 10px; font-weight: 600; }
+
+/* Scroll area for links */
+.bento-scroll-area {
+  flex: 1; min-height: 120px; overflow-y: auto; padding-right: 4px; margin-bottom: 8px;
+}
+.add-link-btn-small {
+  background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.4); border-radius: 6px;
+  color: white; width: 20px; height: 20px; display: flex; align-items: center; justify-content: center;
+  cursor: pointer; font-size: 14px;
+}
+.add-link-btn-small:hover { background: rgba(255,255,255,0.3); }
+
+/* Wallpaper Presets */
+.wallpaper-presets { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 12px; }
+.preset-btn {
+  display: flex; align-items: center; gap: 8px; padding: 8px 10px;
+  border-radius: 8px; background: rgba(255,255,255,0.15);
+  border: 1px solid rgba(255,255,255,0.3); color: rgba(255,255,255,0.9);
+  font-size: 12px; font-weight: 500; cursor: pointer; transition: all 0.2s;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05), inset 0 1px 1px rgba(255,255,255,0.4);
+}
+.preset-btn:hover { background: rgba(255,255,255,0.25); color: white; transform: translateY(-1px); }
+.preset-btn.active { background: rgba(184,212,240,0.3); border-color: rgba(184,212,240,0.6); color: #ffffff; }
+
+.preset-thumb {
+  width: 20px; height: 20px; border-radius: 4px; flex-shrink: 0;
+}
+.preset-thumb-liquid { background: linear-gradient(135deg, #e8e8ee, #d8dce8, #e0dce8); }
+
+.preset-thumb-dark { background: radial-gradient(ellipse, #1a1a2e, #0f0f1a); }
+
+/* Custom wallpaper */
+.custom-wallpaper { margin-top: 8px; display: flex; flex-direction: column; gap: 8px; }
+.file-input { display: none; }
+.file-btn {
+  display: inline-block; padding: 7px 12px; border-radius: 8px;
+  background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3);
+  color: rgba(255,255,255,0.9); font-size: 12px; font-weight: 500; cursor: pointer;
+  transition: all 0.2s; margin-top: 0;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05), inset 0 1px 1px rgba(255,255,255,0.4);
+}
+.file-btn:hover { background: rgba(255,255,255,0.25); color: white; transform: translateY(-1px); }
+
+.file-btn.full-width { display: block; width: 100%; text-align: center; box-sizing: border-box; }
+.upload-btn-row { display: flex; gap: 6px; width: 100%; }
+.upload-btn-row .file-btn { flex: 1; margin: 0; }
+
+/* Toggle Switch */
+.toggle-row {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+.toggle-row:last-child { border-bottom: none; }
+.toggle-row > span { font-size: 13px; color: rgba(255,255,255,0.75); }
+
+.toggle-switch { position: relative; display: inline-block; width: 38px; height: 22px; }
+.toggle-switch input { opacity: 0; width: 0; height: 0; }
+.toggle-slider {
+  position: absolute; cursor: pointer; inset: 0;
+  background: rgba(255,255,255,0.12); border-radius: 22px;
+  transition: 0.3s; border: 1px solid rgba(255,255,255,0.15);
+}
+.toggle-slider::before {
+  content: ''; position: absolute; height: 16px; width: 16px;
+  left: 2px; bottom: 2px; border-radius: 50%;
+  background: rgba(255,255,255,0.5); transition: 0.3s;
+}
+input:checked + .toggle-slider { background: rgba(184,212,240,0.35); border-color: rgba(184,212,240,0.5); }
+input:checked + .toggle-slider::before { transform: translateX(16px); background: #b8d4f0; }
+input:disabled + .toggle-slider { opacity: 0.5; cursor: not-allowed; }
+
+/* Pref rows */
+.pref-row {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.05); gap: 12px;
+}
+.pref-row:last-child { border-bottom: none; }
+.settings-label { font-size: 12px; color: rgba(255,255,255,0.6); flex-shrink: 0; }
+
+.settings-input {
+  background: rgba(0,0,0,0.1); border: none;
+  border-radius: 8px; padding: 6px 10px; color: rgba(255,255,255,0.95);
+  font-size: 12px; width: 140px; transition: all 0.2s;
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.15), 0 1px 0 rgba(255,255,255,0.2);
+}
+.settings-input::placeholder { color: rgba(255,255,255,0.5); }
+.settings-input:focus { background: rgba(0,0,0,0.15); outline: none; box-shadow: inset 0 2px 4px rgba(0,0,0,0.2), 0 1px 0 rgba(255,255,255,0.3); }
+.settings-input-num { width: 70px; text-align: center; }
+
+.settings-select {
+  background: rgba(0,0,0,0.1); border: none;
+  border-radius: 8px; padding: 6px 10px; color: rgba(255,255,255,0.95);
+  font-size: 12px; width: 140px; cursor: pointer;
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.15), 0 1px 0 rgba(255,255,255,0.2);
+}
+.settings-select option { background: #2a2a35; }
+
+/* Quick Links in Settings */
+#settings-quicklinks-list { display: flex; flex-direction: column; gap: 6px; margin-bottom: 10px; }
+.settings-link-item {
+  display: flex; align-items: center; gap: 8px; padding: 8px 10px;
+  border-radius: 8px; background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.08);
+}
+.settings-link-icon { font-size: 16px; width: 24px; text-align: center; }
+.settings-link-info { flex: 1; }
+.settings-link-name { font-size: 12px; color: rgba(255,255,255,0.85); font-weight: 500; }
+.settings-link-url { font-size: 10px; color: rgba(255,255,255,0.35); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 160px; }
+.settings-link-delete {
+  width: 22px; height: 22px; border-radius: 6px;
+  background: rgba(255,80,80,0.15); color: rgba(255,100,100,0.7);
+  font-size: 12px; display: flex; align-items: center; justify-content: center;
+  cursor: pointer; transition: all 0.2s; flex-shrink: 0;
+}
+.settings-link-delete:hover { background: rgba(255,80,80,0.35); color: white; }
+
+.add-link-btn {
+  width: 100%; padding: 8px; border-radius: 8px;
+  background: rgba(255,255,255,0.1); border: 1px dashed rgba(255,255,255,0.3);
+  color: rgba(255,255,255,0.7); font-size: 12px; font-weight: 500; cursor: pointer; transition: all 0.2s;
+}
+.add-link-btn:hover { background: rgba(255,255,255,0.2); color: white; transform: translateY(-1px); }
+
+.link-form { display: flex; flex-direction: column; gap: 8px; margin-top: 10px; }
+.link-form .settings-input { width: 100%; }
+.link-form-actions { display: flex; gap: 8px; }
+
+/* Reset button */
+.btn-reset {
+  width: 100%; padding: 10px; border-radius: 8px;
+  background: rgba(255,60,60,0.1); border: 1px solid rgba(255,60,60,0.2);
+  color: rgba(255,100,100,0.8); font-size: 13px; font-weight: 500; cursor: pointer; transition: all 0.2s;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05), inset 0 1px 1px rgba(255,100,100,0.2);
+}
+.btn-reset:hover { background: rgba(255,60,60,0.2); color: rgba(255,120,120,1); transform: translateY(-1px); }
+
+/* ─── Customize Layout Button (inside bento-toggles card) ─── */
+.customize-layout-btn {
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  width: 100%; padding: 10px 14px; margin-top: 14px;
+  border-radius: 12px;
+  background: rgba(184, 212, 240, 0.12);
+  border: 1px dashed rgba(184, 212, 240, 0.45);
+  color: rgba(184, 212, 240, 0.9);
+  font-size: 12px; font-weight: 600; letter-spacing: 0.5px;
+  cursor: pointer; transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08), inset 0 1px 1px rgba(255,255,255,0.1);
+}
+.customize-layout-btn span:first-child { font-size: 14px; opacity: 0.8; transition: transform 0.3s; }
+.customize-layout-btn:hover {
+  background: rgba(184, 212, 240, 0.22);
+  border-color: rgba(184, 212, 240, 0.7);
+  color: #ffffff;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 16px rgba(184,212,240,0.15), inset 0 1px 1px rgba(255,255,255,0.2);
+}
+.customize-layout-btn:hover span:first-child { transform: rotate(20deg); }
+.customize-layout-btn:active { transform: scale(0.97); }
+
+/* ─── Customize Mode Overlay ─── */
+.customize-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 150;
+  pointer-events: none; /* overlay itself is passthrough so widgets can be dragged */
+  transition: opacity 0.3s ease;
+}
+.customize-overlay.hidden { opacity: 0; visibility: hidden; }
+.customize-overlay:not(.hidden) { opacity: 1; visibility: visible; }
+
+/* Subtle vignette so user knows they are in customize mode */
+.customize-overlay::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: radial-gradient(
+    ellipse at center,
+    transparent 40%,
+    rgba(184, 212, 240, 0.06) 100%
+  );
+  border: 2px solid rgba(184, 212, 240, 0.2);
+  pointer-events: none;
+}
+
+.customize-hint {
+  position: absolute;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(10, 10, 10, 0.75);
+  border: 1px solid rgba(184, 212, 240, 0.35);
+  backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+  color: rgba(184, 212, 240, 0.9);
+  padding: 8px 20px;
+  border-radius: 24px;
+  font-size: 12px; font-weight: 500; letter-spacing: 0.5px;
+  white-space: nowrap;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+  animation: hintPulse 2.5s ease-in-out infinite;
+  pointer-events: none;
+}
+@keyframes hintPulse {
+  0%, 100% { box-shadow: 0 4px 20px rgba(0,0,0,0.3), 0 0 0 0 rgba(184,212,240,0); }
+  50% { box-shadow: 0 4px 20px rgba(0,0,0,0.3), 0 0 0 6px rgba(184,212,240,0.12); }
+}
+
+.customize-done-btn {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  pointer-events: all; /* this button IS interactive */
+  padding: 10px 22px;
+  border-radius: 12px;
+  /* Dark adaptive base so button is always readable on any wallpaper color */
+  background: rgba(10, 10, 10, 0.65);
+  border: 1px solid rgba(184, 212, 240, 0.6);
+  backdrop-filter: blur(20px) saturate(120%); -webkit-backdrop-filter: blur(20px) saturate(120%);
+  color: #ffffff;
+  font-size: 13px; font-weight: 700; letter-spacing: 0.4px;
+  cursor: pointer; transition: all 0.2s;
+  /* Double shadow: dark drop + accent glow for contrast on all backgrounds */
+  box-shadow:
+    0 2px 0 rgba(255,255,255,0.08) inset,
+    0 6px 20px rgba(0,0,0,0.5),
+    0 0 0 1px rgba(0,0,0,0.3),
+    0 0 16px rgba(184,212,240,0.12);
+  text-shadow: 0 1px 4px rgba(0,0,0,0.8);
+}
+.customize-done-btn:hover {
+  background: rgba(20, 20, 20, 0.8);
+  border-color: rgba(184, 212, 240, 0.9);
+  transform: translateY(-1px);
+  box-shadow:
+    0 2px 0 rgba(255,255,255,0.1) inset,
+    0 8px 24px rgba(0,0,0,0.6),
+    0 0 0 1px rgba(0,0,0,0.4),
+    0 0 20px rgba(184,212,240,0.25);
+}
+.customize-done-btn:active { transform: scale(0.96); }
+
+/* ─── Widget highlight ring in customize mode ─── */
+body.customize-mode .widget {
+  outline: 1.5px dashed rgba(184, 212, 240, 0.45);
+  outline-offset: 4px;
+  cursor: grab !important;
+  transition: outline-color 0.2s, box-shadow 0.2s;
+}
+body.customize-mode .widget:hover {
+  outline-color: rgba(184, 212, 240, 0.9);
+  box-shadow: 0 0 0 4px rgba(184, 212, 240, 0.1);
+}
+body.customize-mode .widget.dragging {
+  cursor: grabbing !important;
+  outline-color: #b8d4f0;
+  box-shadow: 0 12px 40px rgba(0,0,0,0.4), 0 0 0 4px rgba(184,212,240,0.25) !important;
+  z-index: 1000;
+}
+/* Quick links pinned at bottom — not draggable in customize mode */
+body.customize-mode .widget-quicklinks {
+  outline: none !important;
+  cursor: default !important;
+}
+
+/* ─── Hide settings arrow button during customize mode ─── */
+body.customize-mode .settings-menu-container {
+  display: none !important;
+}
+
+/* ─── Reset Layout Button (top-left of customize overlay) ─── */
+.customize-reset-btn {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  pointer-events: all;
+  padding: 10px 20px;
+  border-radius: 12px;
+  background: rgba(10, 10, 10, 0.65);
+  border: 1px solid rgba(255, 210, 120, 0.55);
+  backdrop-filter: blur(20px) saturate(120%); -webkit-backdrop-filter: blur(20px) saturate(120%);
+  color: rgba(255, 220, 140, 0.95);
+  font-size: 13px; font-weight: 700; letter-spacing: 0.4px;
+  cursor: pointer; transition: all 0.2s;
+  box-shadow:
+    0 2px 0 rgba(255,255,255,0.06) inset,
+    0 6px 20px rgba(0,0,0,0.5),
+    0 0 0 1px rgba(0,0,0,0.3),
+    0 0 16px rgba(255,200,80,0.1);
+  text-shadow: 0 1px 4px rgba(0,0,0,0.8);
+}
+.customize-reset-btn:hover {
+  background: rgba(20, 20, 20, 0.8);
+  border-color: rgba(255, 210, 120, 0.85);
+  color: #ffe898;
+  transform: translateY(-1px);
+  box-shadow:
+    0 2px 0 rgba(255,255,255,0.08) inset,
+    0 8px 24px rgba(0,0,0,0.6),
+    0 0 0 1px rgba(0,0,0,0.4),
+    0 0 20px rgba(255,200,80,0.2);
+}
+.customize-reset-btn:active { transform: scale(0.96); }
+
+/* ═══════════════════════════════════════════════════════
+   WIDGET TILE GRID  (replaces old bento-toggle-btn grid)
+═══════════════════════════════════════════════════════ */
+.widget-toggle-view { display: flex; flex-direction: column; flex: 1; }
+
+.widget-tiles-slider {
+  display: flex;
+  flex-direction: row;
+  gap: 14px;
+  width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  /* Hide scrollbar but keep scroll functionality */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  margin-bottom: 6px;
+}
+.widget-tiles-slider::-webkit-scrollbar { 
+  display: none; 
+}
+
+.widget-slide {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(2, 80px); /* Strict height enforcement */
+  gap: 10px;
+  flex: 0 0 100%;
+  scroll-snap-align: start;
+}
+
+.bento-widget-tile {
+  position: relative;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 7px; padding: 14px 8px 10px;
+  height: 80px; /* Fixed height for perfect pagination math */
+  box-sizing: border-box;
+  background: rgba(0,0,0,0.18);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 14px;
+  color: rgba(255,255,255,0.55);
+  cursor: pointer; transition: all 0.2s cubic-bezier(0.4,0,0.2,1);
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.12);
+  overflow: hidden;
+}
+.bento-widget-tile::before {
+  content: ''; position: absolute; inset: 0; border-radius: inherit;
+  background: linear-gradient(135deg, rgba(255,255,255,0.04) 0%, transparent 60%);
+  pointer-events: none;
+}
+.bento-widget-tile:hover {
+  background: rgba(255,255,255,0.1);
+  border-color: rgba(255,255,255,0.22);
+  color: rgba(255,255,255,0.85);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(0,0,0,0.2), inset 0 1px 2px rgba(255,255,255,0.1);
+}
+.bento-widget-tile:active { transform: scale(0.96); }
+
+/* Active: widget is currently visible */
+.bento-widget-tile.active {
+  background: rgba(184,212,240,0.18);
+  border-color: rgba(184,212,240,0.45);
+  color: #ffffff;
+  box-shadow: 0 4px 14px rgba(184,212,240,0.12), inset 0 1px 2px rgba(255,255,255,0.3);
+}
+
+.tile-icon { font-size: 22px; line-height: 1; filter: grayscale(0.5); transition: filter 0.2s; }
+.bento-widget-tile.active .tile-icon { filter: grayscale(0); }
+
+.tile-label {
+  font-size: 10px; font-weight: 700; letter-spacing: 0.8px;
+  text-transform: uppercase; opacity: 0.65;
+}
+.bento-widget-tile.active .tile-label { opacity: 1; }
+
+/* Tiny green status dot: bottom-right corner */
+.tile-status-dot {
+  position: absolute; bottom: 7px; right: 9px;
+  width: 6px; height: 6px; border-radius: 50%;
+  background: rgba(255,255,255,0.15); transition: all 0.25s;
+}
+.bento-widget-tile.active .tile-status-dot {
+  background: rgba(100,220,160,0.9);
+  box-shadow: 0 0 6px rgba(100,220,160,0.6);
+}
+
+/* ─── Quick Toggle: inline on/off button per tile ─── */
+.tile-quick-toggle {
+  position: absolute;
+  top: 7px;
+  left: 7px;
+  width: 28px;
+  height: 16px;
+  border-radius: 8px;
+  background: rgba(255,255,255,0.10);
+  border: 1px solid rgba(255,255,255,0.18);
+  cursor: pointer;
+  transition: background 0.22s, border-color 0.22s, box-shadow 0.22s;
+  flex-shrink: 0;
+  padding: 0;
+  z-index: 2;
+}
+/* The slider knob */
+.tile-quick-toggle::after {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.35);
+  transition: transform 0.22s cubic-bezier(0.4,0,0.2,1), background 0.22s;
+}
+/* Active state — tile is ON */
+.bento-widget-tile.active .tile-quick-toggle {
+  background: rgba(100,220,160,0.30);
+  border-color: rgba(100,220,160,0.55);
+  box-shadow: 0 0 8px rgba(100,220,160,0.25);
+}
+.bento-widget-tile.active .tile-quick-toggle::after {
+  transform: translateX(12px);
+  background: rgba(100,220,160,0.95);
+}
+/* Hover tweak */
+.tile-quick-toggle:hover {
+  border-color: rgba(255,255,255,0.38);
+  background: rgba(255,255,255,0.18);
+}
+.bento-widget-tile.active .tile-quick-toggle:hover {
+  background: rgba(100,220,160,0.45);
+  border-color: rgba(100,220,160,0.75);
+}
+
+/* ═══════════════════════════════════════════════════════
+   PER-WIDGET SETTINGS SUB-VIEW
+═══════════════════════════════════════════════════════ */
+.widget-settings-view {
+  display: flex; flex-direction: column; flex: 1;
+  animation: wsSlideIn 0.22s cubic-bezier(0.34,1.2,0.64,1) both;
+}
+.widget-settings-view.hidden { display: none; }
+
+@keyframes wsSlideIn {
+  from { opacity: 0; transform: translateX(16px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+/* Header: back button + widget name */
+.ws-header {
+  display: flex; align-items: center; gap: 10px; margin-bottom: 14px;
+}
+.ws-back-btn {
+  display: flex; align-items: center; gap: 5px;
+  padding: 6px 12px 6px 9px; border-radius: 20px;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.15);
+  color: rgba(255,255,255,0.65); font-size: 12px; font-weight: 600;
+  cursor: pointer; transition: all 0.18s; flex-shrink: 0;
+}
+.ws-back-btn:hover { background: rgba(255,255,255,0.16); color: white; }
+.ws-back-btn svg { flex-shrink: 0; }
+
+.ws-title-group {
+  display: flex; align-items: center; gap: 7px;
+  flex: 1; justify-content: flex-end;
+}
+.ws-widget-icon { font-size: 18px; }
+.ws-widget-title {
+  font-size: 13px; font-weight: 700; letter-spacing: 0.5px;
+  color: rgba(255,255,255,0.9); text-transform: uppercase;
+}
+
+/* Visibility toggle row */
+.ws-visibility-row {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 10px 12px;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 10px; margin-bottom: 10px;
+}
+.ws-field-label { font-size: 12px; color: rgba(255,255,255,0.7); font-weight: 500; }
+
+.ws-separator {
+  height: 1px; background: rgba(255,255,255,0.07);
+  margin-bottom: 12px; border-radius: 1px;
+}
+
+/* Per-widget panels */
+.ws-panel { display: flex; flex-direction: column; flex: 1; }
+.ws-panel.hidden { display: none; }
+
+/* Info text (for widgets with no extra options) */
+.ws-info-text {
+  font-size: 12px; color: rgba(255,255,255,0.45); line-height: 1.65;
+  padding: 12px 14px; margin: 0;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 10px;
+}
+.ws-info-text strong { color: rgba(255,255,255,0.65); }
+
+/* ═══════════════════════════════════════════════════════
+   CROP MODAL (fullscreen)
+═══════════════════════════════════════════════════════ */
+.crop-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 5000;
+  display: flex;
+  flex-direction: column;
+  background: rgba(6, 6, 14, 0.97);
+  backdrop-filter: blur(24px) saturate(120%);
+  -webkit-backdrop-filter: blur(24px) saturate(120%);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.crop-modal--visible {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.crop-modal--hiding {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* ── Header ── */
+.crop-modal__header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 14px 24px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+  flex-shrink: 0;
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.crop-modal__title {
+  font-size: 15px;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.95);
+  letter-spacing: 0.3px;
+  white-space: nowrap;
+}
+
+.crop-modal__hint {
+  font-size: 11.5px;
+  color: rgba(255, 255, 255, 0.3);
+  letter-spacing: 0.2px;
+}
+
+/* ── Canvas area ── */
+.crop-canvas-container {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+  cursor: grab;
+}
+
+.crop-canvas-container:active { cursor: grabbing; }
+
+#crop-canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* ── Bottom toolbar ── */
+.crop-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 12px 24px;
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
+  background: rgba(0, 0, 0, 0.35);
+  flex-shrink: 0;
+}
+
+.crop-toolbar__group {
+  display: flex;
+  gap: 4px;
+}
+
+.crop-toolbar__spacer {
+  flex: 1;
+}
+
+/* ── Toolbar buttons ── */
+.crop-tool-btn {
+  height: 38px;
+  min-width: 38px;
+  padding: 0 14px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.11);
+  color: rgba(255, 255, 255, 0.75);
+  font-size: 17px;
+  font-family: inherit;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  letter-spacing: 0;
+  user-select: none;
+}
+
+.crop-tool-btn:hover {
+  background: rgba(255, 255, 255, 0.15);
+  color: rgba(255, 255, 255, 0.95);
+  border-color: rgba(255, 255, 255, 0.22);
+  transform: translateY(-1px);
+}
+
+.crop-tool-btn:active {
+  transform: scale(0.93);
+}
+
+/* Cancel */
+.crop-tool-btn--cancel {
+  font-size: 13px;
+  padding: 0 16px;
+  color: rgba(255, 110, 110, 0.85);
+  border-color: rgba(255, 90, 90, 0.2);
+  background: rgba(255, 70, 70, 0.07);
+}
+.crop-tool-btn--cancel:hover {
+  background: rgba(255, 70, 70, 0.18);
+  color: rgba(255, 160, 160, 1);
+  border-color: rgba(255, 90, 90, 0.4);
+}
+
+/* Confirm */
+.crop-tool-btn--confirm {
+  font-size: 13px;
+  font-weight: 600;
+  padding: 0 22px;
+  background: rgba(100, 180, 255, 0.16);
+  border-color: rgba(100, 180, 255, 0.38);
+  color: rgba(180, 220, 255, 0.95);
+  box-shadow: 0 2px 12px rgba(100, 180, 255, 0.08);
+}
+.crop-tool-btn--confirm:hover {
+  background: rgba(100, 180, 255, 0.30);
+  border-color: rgba(100, 180, 255, 0.65);
+  color: #ffffff;
+  box-shadow: 0 4px 16px rgba(100, 180, 255, 0.2);
+}
+
+/* Separator between groups */
+.crop-toolbar__group + .crop-toolbar__group {
+  border-left: 1px solid rgba(255, 255, 255, 0.07);
+  padding-left: 6px;
+  margin-left: 2px;
+}
+
